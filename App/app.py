@@ -17,10 +17,10 @@ import json
 
 # Firebase configuration and initialization
 cred = credentials.Certificate(
-    "./Config/data-server-15fd3-firebase-adminsdk-7g37y-0ed8c7b942.json"
+    "App/Config/data-server-15fd3-firebase-adminsdk-7g37y-0ed8c7b942.json"
 )
 firebase = firebase_admin.initialize_app(cred)
-pb = pyrebase.initialize_app(json.load(open("./Config/firebase_config.json")))
+pb = pyrebase.initialize_app(json.load(open("App/Config/firebase_config.json")))
 
 
 # FastAPI set-up and configuration
@@ -194,21 +194,20 @@ async def login(req: Request):
         # sign-in user with pyrebase and store the JWT token
         user = pb.auth().sign_in_with_email_and_password(email, password)
         jwt = user["idToken"]
-        token = json.loads(response.text)["token"]
+        #token = json.loads(response.text)["token"]
         user_id = auth.verify_id_token(jwt)
 
         # ---------------------------------------------------------------------------
         # Additional code for adding to database
         # ---------------------------------------------------------------------------
 
-        return JSONResponse(content={"user_id": user["uid"]}, status_code=200)
+        return JSONResponse(content={'token': jwt,"user_id": user_id["uid"]}, status_code=200)
 
     except:
         return HTTPException(
             detail={"message": "There was an error logging in (USER DOESN'T EXIST)"},
             status_code=400,
         )
-
 
 # DEBUG-ENDPOINT: ping endpoint for validating JWT token
 @app.post("/ping", include_in_schema=False)
@@ -244,3 +243,5 @@ def get_google_provider_cfg():
 
 
 
+if __name__ == "__main__":
+    uvicorn.run("app:app")

@@ -7,6 +7,7 @@ def login(email: str, password: str):
        "password": password
    }
    response = requests.post(url="http://127.0.0.1:1234/email-login", json=body)
+   print(json.loads(response.text)["user_id"])
    return json.loads(response.text)["token"]
  
 token = login("abc@abc.com", "password")
