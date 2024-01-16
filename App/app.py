@@ -1,5 +1,4 @@
 # Google client authentication API from: https://console.cloud.google.com/apis/credentials
-# Firebase users at: https://console.firebase.google.com/u/0/project/data-server-15fd3/authentication/users
 from firebase_admin import credentials, auth
 import firebase_admin
 import pyrebase
