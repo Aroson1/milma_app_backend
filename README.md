@@ -13,6 +13,7 @@ To install and set up the project:
     ```bash
     pip install -r requirements.txt
     ```
+4. Add the .env file to the root directory.
 
 ## Usage
 

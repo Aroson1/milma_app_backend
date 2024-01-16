@@ -12,15 +12,18 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 
 from oauthlib.oauth2 import WebApplicationClient
+from dotenv import load_dotenv
+import os
 import requests
 import json
 
 # Firebase configuration and initialization
+load_dotenv()
 cred = credentials.Certificate(
-    "App/Config/data-server-15fd3-firebase-adminsdk-7g37y-0ed8c7b942.json"
+    json.loads(os.environ["FIREBASE_ADMIN_CONFIG"])
 )
 firebase = firebase_admin.initialize_app(cred)
-pb = pyrebase.initialize_app(json.load(open("App/Config/firebase_config.json")))
+pb = pyrebase.initialize_app(json.loads(os.environ["FIREBASE_CONFIG"]))
 
 
 # FastAPI set-up and configuration
@@ -37,29 +40,20 @@ app.add_middleware(
 
 # Google OAuth Configuration
 GOOGLE_CLIENT_ID = (
-    "281479270242-i9fu2b24csr54meignstlq0u2slko1nc.apps.googleusercontent.com"
+    os.environ["GOOGLE_CLIENT_ID"]
 )
-GOOGLE_CLIENT_SECRET = "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"
+GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 
 # IMP: MUST BE COMMENTED OUT WHEN IN NOT IN TESTING
 # ----------------------------------------------
-import os
-
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 # ----------------------------------------------
 
 
 # Google sign-in endpoint
-"""
-    This endpoint is used to sign-in users using Google OAuth2.0
-    The user is redirected to the Google sign-in page where they can sign-in using their Google account.
-    After signing in, the user is redirected to the callback endpoint where the user's details are retrieved from Google.
-    The user's details are then used to create a new user in Firebase.
-    The user is then redirected to the app with the user's details.
-"""
 @app.get("/google-auth")
 async def google_sign_in(req: Request):
     redirect_URL = req.base_url._url + "google-auth/callback"
@@ -181,7 +175,7 @@ async def signup(req: Request):
             status_code=200,
         )
     except:
-        return HTTPException(detail={"message": "Error Creating User"}, status_code=400)
+        return HTTPException(detail={"message": "Error Creating User. User already exists."}, status_code=400)
 
 
 # Email login endpoint
@@ -194,20 +188,14 @@ async def login(req: Request):
         # sign-in user with pyrebase and store the JWT token
         user = pb.auth().sign_in_with_email_and_password(email, password)
         jwt = user["idToken"]
-        #token = json.loads(response.text)["token"]
-        user_id = auth.verify_id_token(jwt)
-
         # ---------------------------------------------------------------------------
         # Additional code for adding to database
         # ---------------------------------------------------------------------------
 
-        return JSONResponse(content={'token': jwt,"user_id": user_id["uid"]}, status_code=200)
+        return JSONResponse(content={'token': jwt}, status_code=200)
 
     except:
-        return HTTPException(
-            detail={"message": "There was an error logging in (USER DOESN'T EXIST)"},
-            status_code=400,
-        )
+        return HTTPException(detail={'message': 'There was an error logging in'}, status_code=400)
 
 # DEBUG-ENDPOINT: ping endpoint for validating JWT token
 @app.post("/ping", include_in_schema=False)
@@ -217,12 +205,6 @@ async def vali(req: Request):
     print(f"jwt:{jwt}")
     user = auth.verify_id_token(jwt)
     return user["uid"]
-
-# DEBUG-ENDPOINT: For testing various request responses
-@app.get("/items/{item_id}")
-def read_root(req: Request):
-    bye = req.url._url
-    return
 
 def validate(email):
     try:
