@@ -8,7 +8,6 @@ __pycache__/
 
 # Distribution / packaging
 SRC/
-lib64/
 bin/
 .Python
 build/
