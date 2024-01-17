@@ -9,11 +9,15 @@ To install and set up the project:
 
 1. Clone the repository.
 2. Navigate to the project directory.
-3. Install the dependencies using the following command:
+3. Make a new virtual environment.
+    ```bash
+    python3 -m venv .
+    ```
+4. Install the dependencies using the following command:
     ```bash
     pip install -r requirements.txt
     ```
-4. Add the .env file to the root directory.
+5. Add the .env file to the root directory.
 
 ## Usage
 
