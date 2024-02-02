@@ -7,6 +7,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+old/
 SRC/
 lib64
 bin/
