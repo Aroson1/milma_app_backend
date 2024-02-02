@@ -21,7 +21,4 @@ To install and set up the project:
 
 ## Usage
 
-```bash
-uvicorn --port 1234 main:app --reload
-```
-_Note: Make sure that the port is set to 1234._
+Run the app/main.py file to start server. Use Test_post.py file to post data. 
