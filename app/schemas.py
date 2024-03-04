@@ -2,25 +2,27 @@ from pydantic import BaseModel
 
 class Products(BaseModel):
     title: str
-    description:str
+    description: str
     price: int
-    available: bool = True
+    available: bool
     rating: int
 
 class Users(BaseModel):
     username: str
     email: str
-    last_login: str
+    hostelno: str
+    phoneno: int
     # profile_picture: str
-    # is_active: bool = True
+    # is_active: bool
+    last_login: str
     
 
 class CurrentOrders(BaseModel):
-    username: str
-    item_name: str
-    quantity: int
+    rollno: str
+    items: list
+    quantity: list
     total_price: int
     order_date: str
-    is_active: bool = True
+    status_enum: int
     
     

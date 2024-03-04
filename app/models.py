@@ -1,4 +1,4 @@
-from sqlalchemy import CheckConstraint, String, Boolean, Integer, Column, text, TIMESTAMP
+from sqlalchemy import CheckConstraint, String, Boolean, Integer, Column, text, TIMESTAMP, ARRAY
 from databse import Base
 
 class Product(Base):
@@ -18,18 +18,22 @@ class Users(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String, nullable=False)
     email = Column(String, nullable=False)
+    hostelno = Column(String, nullable=False)
+    phoneno = Column(Integer, nullable=False)
     # profile_picture = Column(String, nullable=False)
     # is_active = Column(Boolean, server_default=text('false'))
-    last_login = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('Now()'))
+    last_login = Column(TIMESTAMP(timezone=True), server_default=text('Now()'))
 
 class CurrentOrders(Base):
     __tablename__ = 'current_orders'
 
     id = Column(Integer, primary_key=True, nullable=False)
-    username = Column(String, nullable=False)
-    item_name = Column(String, nullable=False)
-    quantity = Column(Integer, nullable=False)
+    rollno = Column(String, nullable=False)
+    items = Column(ARRAY(String), nullable=False, server_default='{}')
+    quantity = Column(ARRAY(Integer), nullable=False, server_default='{}')
     total_price = Column(Integer, nullable=False)
     order_date = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('Now()'))
-    is_active = Column(Boolean, server_default=text('true'))
+    ### {PREPARAING, READY, DELIVERED}
+    status_enum = Column(Integer, nullable=False)
+
     
