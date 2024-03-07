@@ -10,7 +10,9 @@ class Product(Base):
     price = Column(Integer, server_default=text('30') , nullable=False)
     available = Column(Boolean, server_default=text('true'))
     rating = Column(Integer, server_default=text('4'))
-
+    categories = Column(ARRAY(String), nullable=False, server_default='{}')
+    imageurl = Column(String, nullable=False, server_default='https://i.imgur.com/crsd3wU.jpeg')
+    expectedtime = Column(Integer, nullable=False, server_default=text('5'))
 
 class Users(Base):
     __tablename__ = 'users'

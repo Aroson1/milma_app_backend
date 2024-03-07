@@ -32,11 +32,11 @@ def postOrder(username: str, item_name: str, quantity: int, total_price: int, or
     response = requests.post(url="http://127.0.0.1:3000/order", json=body)
     return response.json()
 
-token = login("abc@abc.com", "alex")
-print(token)
+# token = login("abc@abc.com", "alex")
+# print(token)
 
-token = items("Maggie", "Noodle it is")
-print(token)
+# token = items("Maggie", "Noodle it is")
+# print(token)
 
 token = postOrder("alex", "Maggie", 2, 60, "2021-10-10 10:10:10.10+00:00")
 print(token)

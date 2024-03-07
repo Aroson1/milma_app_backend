@@ -6,6 +6,9 @@ class Products(BaseModel):
     price: int
     available: bool
     rating: int
+    categories: list
+    imageurl: str
+    expectedtime: int
 
 class Users(BaseModel):
     username: str
